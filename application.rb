@@ -1,4 +1,6 @@
 require 'dotenv/load'
+require 'yaml'
+require 'byebug'
 require_relative 'lib/ir_data_for_users'
 
 class Application
@@ -11,10 +13,7 @@ class Application
   private
 
   def self.default_users
-    [
-      OpenStruct.new({ name: "Anthony", id: "406148" }), 
-      OpenStruct.new({ name: "Charles", id: "404308" })
-    ]
+    YAML.load(File.read("data/users.yml")).map { |user| OpenStruct.new(user) }
   end
 
   def self.temp_display(data)
