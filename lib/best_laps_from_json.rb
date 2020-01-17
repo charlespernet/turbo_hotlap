@@ -1,6 +1,6 @@
 require 'json'
 
-class Adapter
+class BestLapsFromJson
   def initialize(json)
     @json = json
   end
@@ -16,7 +16,7 @@ class Adapter
   def best_lap_on_track(laps_data)
     {
       track_name: track_name(laps_data),
-      bestlap: best_lap(laps_data)
+      best_lap: best_lap(laps_data)
     }
   end
 
