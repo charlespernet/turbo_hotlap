@@ -18,9 +18,10 @@ class Application
 
   def self.temp_display(data)
     puts 'Les meilleurs de Turbo'
+    puts "=" * 10
     data.each do |user|
-      puts "=" * 10
-      puts "#{user[:user_name]}"
+      puts "#{user[:user_name].upcase}"
+      puts '-' * 10
       user[:best_laps].each do |lap| 
         puts "#{lap[:track_name]} - #{lap[:best_lap]}"
       end
