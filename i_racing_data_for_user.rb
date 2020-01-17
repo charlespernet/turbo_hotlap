@@ -2,26 +2,24 @@ require 'rest-client'
 require_relative 'adapter'
 
 class IRacingDataForUser
-  BASE_URL = "https://members.iracing.com/memberstats/member/GetPersonalBests?carid=1&custid="
-
-  def initialize(cust_id)
-    @cust_id = cust_id
-  end
-
   def call
     {
       user_id: cust_id,
-      user_name: 
+      user_name: cust_name,
       best_laps: Adapter.new(RestClient.get(url, headers)).call
     }
   end
 
   private
 
-  attr_reader :cust_id
+  attr_reader :cust_id, :cust_name, :url
 
-  def url
-    "#{BASE_URL}#{cust_id}"
+  BASE_URL = "https://members.iracing.com/memberstats/member/GetPersonalBests?carid=1&custid="
+
+  def initialize(user)
+    @cust_id = user.id
+    @cust_name = user.name
+    @url = "#{BASE_URL}#{cust_id}"
   end
 
   def cookie

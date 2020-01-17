@@ -20,7 +20,7 @@ class Adapter
     }
   end
 
-  def best_laps
+  def best_laps(grouped_by_track)
     grouped_by_track.map { |_trackid, laps_data| best_lap_on_track(laps_data) }
   end
 
