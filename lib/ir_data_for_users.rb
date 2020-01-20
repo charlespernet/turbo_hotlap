@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rest-client'
 require_relative 'best_laps_from_json'
 
