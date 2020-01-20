@@ -1,15 +1,16 @@
 # frozen_string_literal: true
-
-require 'dotenv/load'
 require 'discordrb'
+require 'dotenv/load'
+require 'yaml'
+require_relative 'ir_data_for_users'
 
 class TurboRacingBot
   User = Struct.new(:name, :ir_id, keyword_init: true)
 
-  def self.run
+  def self.start
     bot = Discordrb::Bot.new token: ENV['DISCORD_BOT_TOKEN']
 
-    bot.message(content: 'TurboLaps') do |event|
+    bot.message(content: 'Who is faster ?') do |event|
       data = IrDataForUsers.new(default_users).call
       event.respond discord_message(data)
     end
@@ -25,22 +26,24 @@ class TurboRacingBot
 
   def self.discord_message(data)
     <<~DISCORD_MESSAGE
-      Les temps du championnat Skip Barber
-      #{'=' * 10}
+      **Fastest Turbos**
+
       #{build_message(data)}
     DISCORD_MESSAGE
   end
 
   def self.build_message(data)
-    data.each do |user|
+    data.map do |user|
       <<~USER_LAPS
-        "#{user[:user_name].upcase}"
-        '-' * 10
-        user[:best_laps].each do |lap| 
-          "#{lap[:track_name]} - #{lap[:best_lap]}"
-        end
-        #{'=' * 10}
+        #{user[:user_name].upcase}
+        #{build_user_laps(user[:best_laps])}
       USER_LAPS
+    end
+  end
+
+  def self.build_user_laps(laps)
+    laps.map do |lap|
+      "#{lap[:track_name]} - #{lap[:best_lap]}"
     end
   end
 end
