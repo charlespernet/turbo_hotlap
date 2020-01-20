@@ -30,7 +30,7 @@ class IrDataForUsers
     {
       "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2)",
       "accept" => "*/*",
-      "cookie" => ENV['cookie']
+      "cookie" => ENV['IRCOOKIE']
     }
   end
 end
