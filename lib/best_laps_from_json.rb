@@ -1,10 +1,6 @@
 require 'json'
 
 class BestLapsFromJson
-  def initialize(json)
-    @json = json
-  end
-
   def call
     laps = JSON.parse(json)
     grouped_by_track = laps.group_by { |lap| lap["trackid"] }
@@ -12,6 +8,12 @@ class BestLapsFromJson
   end
 
   private 
+
+  attr_reader :json
+
+  def initialize(json)
+    @json = json
+  end
 
   def best_lap_on_track(laps_data)
     {
@@ -31,6 +33,4 @@ class BestLapsFromJson
   def best_lap(laps_data)
     laps_data.map { |lap_data| lap_data["bestlaptimeformatted"].gsub("%3A", '.') }.min
   end
-
-  attr_reader :json
 end
