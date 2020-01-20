@@ -4,9 +4,9 @@ require_relative 'best_laps_from_json'
 class IrDataForUsers
   def call
     users.map do |user|
-      url = "#{BASE_URL}#{user.id}"
+      url = "#{BASE_URL}#{user.ir_id}"
       {
-        user_id: user.id,
+        user_id: user.ir_id,
         user_name: user.name,
         best_laps: BestLapsFromJson.new(RestClient.get(url, headers)).call
       }
@@ -17,7 +17,8 @@ class IrDataForUsers
 
   attr_reader :users
 
-  BASE_URL = "https://members.iracing.com/memberstats/member/GetPersonalBests?carid=1&custid="
+  SKIP_BARBER_ID = 1
+  BASE_URL = "https://members.iracing.com/memberstats/member/GetPersonalBests?carid=#{SKIP_BARBER_ID}&custid="
 
   def initialize(users)
     @users = users

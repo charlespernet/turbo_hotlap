@@ -1,6 +1,5 @@
 require 'dotenv/load'
 require 'yaml'
-require 'byebug'
 require_relative 'lib/ir_data_for_users'
 
 class Application
