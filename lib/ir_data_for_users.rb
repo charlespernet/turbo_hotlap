@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rest-client'
-require_relative 'best_laps_from_json'
+require_relative '../adapters/best_laps_adapter'
 
 class IrDataForUsers
   def call
@@ -10,7 +10,7 @@ class IrDataForUsers
       {
         user_id: user.ir_id,
         user_name: user.name,
-        best_laps: BestLapsFromJson.new(RestClient.get(url, headers)).call
+        best_laps: BestLapsFromAdapter.new(RestClient.get(url, headers)).call
       }
     end
   end

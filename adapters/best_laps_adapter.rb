@@ -2,7 +2,7 @@
 
 require 'json'
 
-class BestLapsFromJson
+class BestLapsAdapter
   def call
     laps = JSON.parse(json)
     grouped_by_track = laps.group_by { |lap| lap["trackid"] }
