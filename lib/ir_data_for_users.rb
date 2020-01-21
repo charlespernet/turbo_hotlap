@@ -10,7 +10,7 @@ class IrDataForUsers
       {
         user_id: user.ir_id,
         user_name: user.name,
-        best_laps: BestLapsFromAdapter.new(RestClient.get(url, headers)).call
+        best_laps: BestLapsAdapter.new(RestClient.get(url, headers)).call
       }
     end
   end

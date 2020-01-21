@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 require 'discordrb'
 require 'dotenv/load'
 require 'yaml'
@@ -8,11 +7,11 @@ class TurboRacingBot
   User = Struct.new(:name, :ir_id, keyword_init: true)
 
   def self.start
-    bot = Discordrb::Bot.new token: ENV['DISCORD_BOT_TOKEN']
+    bot = Discordrb::Commands::CommandBot.new token: ENV['DISCORD_BOT_TOKEN'], prefix: '!'
 
-    bot.message(content: 'Who is faster ?') do |event|
+    bot.command :turbolaps do |event|
       data = IrDataForUsers.new(default_users).call
-      event.respond discord_message(data)
+      build_message(event, data)
     end
 
     bot.run
@@ -24,26 +23,16 @@ class TurboRacingBot
     YAML.load(File.read("data/users.yml")).map { |user_data| User.new(user_data) }
   end
 
-  def self.discord_message(data)
-    <<~DISCORD_MESSAGE
-      **Fastest Turbos**
+  def self.build_message(event, data)
+    event << '**Fastest  Turbos**'
 
-      #{build_message(data)}
-    DISCORD_MESSAGE
-  end
-
-  def self.build_message(data)
-    data.map do |user|
-      <<~USER_LAPS
-        #{user[:user_name].upcase}
-        #{build_user_laps(user[:best_laps])}
-      USER_LAPS
+    data.each do |user|
+      event << ''
+      event << "__#{user[:user_name].upcase}__"
+      user[:best_laps].each do |user_lap|
+        event << "*#{user_lap[:track_name]}* - **#{user_lap[:best_lap]}**"
+      end
     end
-  end
-
-  def self.build_user_laps(laps)
-    laps.map do |lap|
-      "#{lap[:track_name]} - #{lap[:best_lap]}"
-    end
+    nil
   end
 end
