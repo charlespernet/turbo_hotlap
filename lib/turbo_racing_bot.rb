@@ -1,30 +1,35 @@
 # frozen_string_literal: true
 
-require 'discordrb'
 require 'yaml'
-require_relative 'ir_data_for_users'
 
 class TurboRacingBot
   User = Struct.new(:name, :ir_id, keyword_init: true)
 
-  def self.start
-    bot = Discordrb::Commands::CommandBot.new token: ENV['DISCORD_BOT_TOKEN'], prefix: '!'
+  def start
+    ir_bot.login
 
-    bot.command :turbolaps do |event|
-      data = IrDataForUsers.new(default_users).call
+    discord_bot.command :turbolaps do |event|
+      data = ir_bot.build_data_for(default_users)
       build_message(event, data)
     end
 
-    bot.run
+    discord_bot.run
   end
 
   private
 
-  def self.default_users
+  attr_reader :discord_bot, :ir_bot
+
+  def initialize(discord_bot, ir_bot)
+    @discord_bot = discord_bot
+    @ir_bot = ir_bot
+  end
+
+  def default_users
     YAML.load(File.read("data/users.yml")).map { |user_data| User.new(user_data) }
   end
 
-  def self.build_message(event, data)
+  def build_message(event, data)
     event << '**Fastest  Turbos**'
 
     data.each do |user|
