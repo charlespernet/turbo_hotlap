@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'discordrb'
 require 'yaml'
 require_relative 'ir_data_for_users'
