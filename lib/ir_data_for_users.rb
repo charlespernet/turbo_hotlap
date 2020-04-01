@@ -7,10 +7,12 @@ class IrDataForUsers
   def call
     users.map do |user|
       url = "#{BASE_URL}#{user.ir_id}"
+      ir_json = RestClient.get(url, headers)
+      
       {
         user_id: user.ir_id,
         user_name: user.name,
-        best_laps: BestLapsAdapter.new(RestClient.get(url, headers)).call
+        best_laps: BestLapsAdapter.new(ir_json).call
       }
     end
   end
