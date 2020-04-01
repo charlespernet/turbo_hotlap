@@ -1,5 +1,4 @@
 require 'discordrb'
-require 'dotenv/load'
 require 'yaml'
 require_relative 'ir_data_for_users'
 
