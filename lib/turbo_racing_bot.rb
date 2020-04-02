@@ -2,6 +2,7 @@
 
 require 'yaml'
 require_relative '../adapters/ir_data_adapter'
+require 'byebug'
 
 class TurboRacingBot
   User = Struct.new(:name, :ir_id, keyword_init: true)
@@ -9,9 +10,13 @@ class TurboRacingBot
   def start
     ir_bot.login
 
-    discord_bot.command :turbolaps do |event|
+    discord_bot.command :turbolaps, description: 'List best laps' do |event, options|
       data = ir_bot.fetch_data_for(default_users)
-      formatted_data = IrDataAdapter.new(data).call
+      if options == 'all'
+        formatted_data = IrDataAdapter.new(data).call
+      else
+        formatted_data = IrDataAdapter.new(data, filter: :current).call
+      end
 
       build_message(event, formatted_data)
     end

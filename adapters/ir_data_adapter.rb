@@ -14,6 +14,10 @@ class IrDataAdapter
       Track.new(track_info['trackid'], track_info['trackname'].gsub("+", ' '))  
     end.uniq
 
+    if options[:filter] == :current
+      tracks.select! { |track| season_tracks_ids.include?(track.id)  }
+    end
+
     tracks.map do |track| 
       {
         track_name: track.name,
@@ -22,7 +26,7 @@ class IrDataAdapter
     end
   end
 
-  private 
+  private
 
   def best_laps_for(track_id)
     best_laps = data.map do |driver_data|
@@ -43,9 +47,15 @@ class IrDataAdapter
     # laps.delete_if { |lap| lap['bestlaptimeformatted'] }
   end
 
-  attr_reader :data
 
-  def initialize(data)
+  def season_tracks_ids
+    [166, 346, 152, 350, 2, 249, 163, 145, 149, 319, 180, 218]
+  end
+
+  attr_reader :data, :options
+
+  def initialize(data, options = {})
     @data = data
+    @options = options
   end
 end
