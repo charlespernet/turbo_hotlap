@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../adapters/ir_data_adapter'
 
 class TurboRacingBot
   User = Struct.new(:name, :ir_id, keyword_init: true)
@@ -9,8 +10,10 @@ class TurboRacingBot
     ir_bot.login
 
     discord_bot.command :turbolaps do |event|
-      data = ir_bot.build_data_for(default_users)
-      build_message(event, data)
+      data = ir_bot.fetch_data_for(default_users)
+      formatted_data = IrDataAdapter.new(data).call
+
+      build_message(event, formatted_data)
     end
 
     discord_bot.run
@@ -30,13 +33,13 @@ class TurboRacingBot
   end
 
   def build_message(event, data)
-    event << '**Fastest  Turbos**'
+    event << '**Fastest Turbos by Track**'
 
-    data.each do |user|
+    data.each do |track|
       event << ''
-      event << "__#{user[:user_name].upcase}__"
-      user[:best_laps].each do |user_lap|
-        event << "*#{user_lap[:track_name]}* - **#{user_lap[:best_lap]}**"
+      event << "__#{track[:track_name].upcase}__"
+      track[:best_laps].each do |user_lap|
+        event << "*#{user_lap[:username]}* - **#{user_lap[:best_lap]}**"
       end
     end
     nil

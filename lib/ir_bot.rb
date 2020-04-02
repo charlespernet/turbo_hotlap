@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'mechanize'
-require_relative '../adapters/best_laps_adapter'
+require 'json'
 
 class IrBot
   def login
@@ -13,15 +13,14 @@ class IrBot
     end
   end
 
-  def build_data_for(users)
+  def fetch_data_for(users)
     users.map do |user|
       url = "#{BASE_URL}#{user.ir_id}"
       ir_json = agent.get(url).body
 
       {
-        user_id: user.ir_id,
         user_name: user.name,
-        best_laps: BestLapsAdapter.new(ir_json).call
+        user_bests: JSON.parse(ir_json)
       }
     end
   end
@@ -31,7 +30,7 @@ class IrBot
   SKIP_BARBER_ID = 1
   BASE_URL = "https://members.iracing.com/memberstats/member/GetPersonalBests?carid=#{SKIP_BARBER_ID}&custid="
 
-  attr_reader :users, :agent
+  attr_reader :agent
 
   def initialize
     @agent = Mechanize.new { |a| a.user_agent_alias = 'Mac Mozilla' }
