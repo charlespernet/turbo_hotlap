@@ -2,7 +2,6 @@
 
 require 'yaml'
 require_relative '../adapters/ir_data_adapter'
-require 'byebug'
 
 class TurboRacingBot
   User = Struct.new(:name, :ir_id, keyword_init: true)
