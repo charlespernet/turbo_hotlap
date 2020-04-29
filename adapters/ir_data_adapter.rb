@@ -31,22 +31,24 @@ class IrDataAdapter
   def best_laps_for(track_id)
     best_laps = data.map do |driver_data|
       laps = driver_data[:user_bests].select { |driver_data| driver_data['trackid'] == track_id }
-      if laps.any?
-        best_lap = laps.map { |lap| lap['bestlaptimeformatted'].gsub("%3A", '.') }.min
-      else
-        best_lap = nil
-      end
-      
+
       {
         username: driver_data[:user_name],
-        best_lap: best_lap
+        best_lap: find_best_lap(laps)
       }
     end
 
     best_laps.delete_if { |lap| lap[:best_lap].nil? }.sort_by { |lap| lap[:best_lap] }
-    # laps.delete_if { |lap| lap['bestlaptimeformatted'] }
   end
 
+  def find_best_lap(laps)
+    return if laps.empty?
+
+    laps.map do |lap|
+      lap_time = lap['bestlaptimeformatted']
+      lap_time.match(/\A00/) ? nil : lap_time.gsub("%3A", '.') 
+    end.min
+  end
 
   def season_tracks_ids
     [166, 346, 152, 350, 2, 249, 163, 145, 149, 319, 180, 218]
