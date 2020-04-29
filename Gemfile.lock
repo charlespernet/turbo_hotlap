@@ -64,7 +64,6 @@ DEPENDENCIES
   discordrb
   dotenv
   mechanize
-  rest-client
 
 BUNDLED WITH
    1.17.2
