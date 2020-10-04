@@ -7,11 +7,11 @@ class IrDataAdapter
     # sort by most tracks played
     sorted = data.sort_by do |driver_data|
       driver_data[:user_bests].uniq { |el| el["trackid"] }.count
-    end 
+    end
 
     # select tracks to display
     tracks = sorted.last[:user_bests].map do |track_info|
-      Track.new(track_info['trackid'], track_info['trackname'].gsub("+", ' '))  
+      Track.new(track_info['trackid'], track_info['trackname'].gsub("+", ' '))
     end.uniq
 
     if options[:filter] == :current
@@ -51,7 +51,7 @@ class IrDataAdapter
   end
 
   def season_tracks_ids
-    [166, 346, 152, 350, 2, 249, 163, 145, 149, 319, 180, 218]
+    [352, 212, 144, 109, 5, 324, 319, 249, 199, 163, 233, 219]
   end
 
   attr_reader :data, :options
