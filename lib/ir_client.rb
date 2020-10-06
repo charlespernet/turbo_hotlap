@@ -3,7 +3,7 @@
 require 'mechanize'
 require 'json'
 
-class IrBot
+class IrClient
   def login
     agent.get('https://members.iracing.com/membersite/login.jsp') do |page|
       page.form_with(:action => '/membersite/Login') do |f|

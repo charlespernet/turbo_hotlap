@@ -7,10 +7,10 @@ class TurboRacingBot
   User = Struct.new(:name, :ir_id, keyword_init: true)
 
   def start
-    ir_bot.login
+    ir_client.login
 
     discord_bot.command :turbolaps, description: 'List best laps' do |event, options|
-      data = ir_bot.fetch_data_for(default_users)
+      data = ir_client.fetch_data_for(default_users)
       if options == 'all'
         formatted_data = IrDataAdapter.new(data).call
       else
@@ -25,11 +25,11 @@ class TurboRacingBot
 
   private
 
-  attr_reader :discord_bot, :ir_bot
+  attr_reader :discord_bot, :ir_client
 
-  def initialize(discord_bot, ir_bot)
+  def initialize(discord_bot, ir_client)
     @discord_bot = discord_bot
-    @ir_bot = ir_bot
+    @ir_client = ir_client
   end
 
   def default_users
